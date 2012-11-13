@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Speech API Test</title>
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <style type="text/css">
+      #map {
+        margin:0;
+        padding:0;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+      }
+
+      #mic {
+        position:fixed;
+        right:10px;
+        top:10px;
+        margin:0;
+        padding:0;
+        font-size:36px;
+        width:36px;
+        height:42px;
+        cursor:pointer;
+        border:none;
+        position:absolute;
+        outline:none;
+        background:rgba(0,0,0,0.5);
+        border-radius:4px;
+        z-index:10;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <input type="text" x-webkit-speech id="mic" />
+    <script src="js/leaflet.js"></script>
+    <script src="js/ags.min.js"></script>
+    <script type="text/javascript">
+      window.onload = function () {
+        window.map = L.map('map').setView([38.952215, -104.789148], 13);
+
+        var baseUrl = 'http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer';
+        L.agsTileLayer(baseUrl).addTo(map);
+
+        var refUrl = 'http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer';
+        L.agsTileLayer(refUrl).addTo(map);
+      };
+    </script>
+    <script type="text/javascript">
+      var mic = document.getElementById('mic');
+      mic.onwebkitspeechchange = function (e) {
+        var result = e.results[0].utterance;
+
+        console.log(result);
+
+        switch(result) {
+          case 'move left':
+            map.panBy(L.point([-100, 0]));
+            break;
+          case 'move right':
+            map.panBy(L.point([100, 0]));
+            break;
+          case 'move up':
+            map.panBy(L.point([0, -100]));
+            break;
+          case 'move down':
+            map.panBy(L.point([0, 100]));
+            break;
+          case 'move in':
+            map.zoomIn();
+            break;
+          case 'move out':
+            map.zoomOut();
+            break;
+        }
+
+        mic.focus();
+      };
+    </script>
+  </body>
+</html>
