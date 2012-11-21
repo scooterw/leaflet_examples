@@ -22,31 +22,33 @@ window.onload = function () {
     map.panBy(L.point(x,y));
   }
 
-  function processPhrase(phrase) {
-    var words = phrase.split(" ");
+  function magnitudeOfMotion(motion) {
+    return motion == "jump" ? 500 : 100
+  }
 
-    var motion = words[0];
-    var direction = words[1];
+  function processPhrase(phrase) {
+    var words     = phrase.split(" "),
+        motion    = words[0],
+        direction = words[1],
+        magnitude = magnitudeOfMotion(motion);
 
     switch(motion) {
       case 'move':
-        var pixelsToMove = 100;
-
         switch(direction) {
           case 'left':
-            panMap(-pixelsToMove, 0);
+            panMap(-magnitude, 0);
             break;
 
           case 'right':
-            panMap(pixelsToMove, 0);
+            panMap(magnitude, 0);
             break;
 
           case 'up':
-            panMap(0, -pixelsToMove);
+            panMap(0, -magnitude);
             break;
 
           case 'down':
-            panMap(0, pixelsToMove);
+            panMap(0, magnitude);
             break;
 
           case 'in':
@@ -60,23 +62,21 @@ window.onload = function () {
         break;
 
       case 'jump':
-        var pixelsToJump = 500;
-
         switch(direction) {
           case 'left':
-            panMap(-pixelsToJump, 0);
+            panMap(-magnitude, 0);
             break;
 
           case 'right':
-            panMap(pixelsToJump, 0);
+            panMap(magnitude, 0);
             break
 
           case 'up':
-            panMap(0, -pixelsToJump);
+            panMap(0, -magnitude);
             break;
 
           case 'down':
-            panMap(0, pixelsToJump);
+            panMap(0, magnitude);
             break;
 
           case 'out':
