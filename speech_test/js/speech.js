@@ -10,29 +10,85 @@ window.onload = function () {
   var mic = document.getElementById('mic');
   
   mic.onwebkitspeechchange = function (e) {
-    var result = e.results[0].utterance;
+    var phrase = e.results[0].utterance;
 
-    switch(result) {
-      case 'move left':
-        map.panBy(L.point([-100, 0]));
-        break;
-      case 'move right':
-        map.panBy(L.point([100, 0]));
-        break;
-      case 'move up':
-        map.panBy(L.point([0, -100]));
-        break;
-      case 'move down':
-        map.panBy(L.point([0, 100]));
-        break;
-      case 'move in':
-        map.zoomIn();
-        break;
-      case 'move out':
-        map.zoomOut();
-        break;
-    }
+    processPhrase(phrase);
 
     mic.focus();
   };
+
+  function panMap(x,y)
+  {
+    map.panBy(L.point(x,y));
+  }
+
+  function processPhrase(phrase) {
+    var words = phrase.split(" ");
+
+    var motion = words[0];
+    var direction = words[1];
+
+    switch(motion) {
+      case 'move':
+        var pixelsToMove = 100;
+
+        switch(direction) {
+          case 'left':
+            panMap(-pixelsToMove, 0);
+            break;
+
+          case 'right':
+            panMap(pixelsToMove, 0);
+            break;
+
+          case 'up':
+            panMap(0, -pixelsToMove);
+            break;
+
+          case 'down':
+            panMap(0, pixelsToMove);
+            break;
+
+          case 'in':
+            map.zoomIn();
+            break;
+
+          case 'out':
+            map.zoomOut();
+            break;
+        }
+        break;
+
+      case 'jump':
+        var pixelsToJump = 500;
+
+        switch(direction) {
+          case 'left':
+            panMap(-pixelsToJump, 0);
+            break;
+
+          case 'right':
+            panMap(pixelsToJump, 0);
+            break
+
+          case 'up':
+            panMap(0, -pixelsToJump);
+            break;
+
+          case 'down':
+            panMap(0, pixelsToJump);
+            break;
+
+          case 'out':
+            map.setZoom(map.getZoom()-3);
+            break;
+          
+          case 'in':
+            map.setZoom(map.getZoom()+3);
+            break;
+        }
+        break;
+    }
+  };
 };
+
